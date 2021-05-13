@@ -315,8 +315,8 @@ public class LancamentoServiceTeste {
 		BigDecimal despesa = BigDecimal.valueOf(100f);
 		BigDecimal totalEsperado = BigDecimal.valueOf(100f);
 		
-		Mockito.when(repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.RECEITA)).thenReturn(receita);
-		Mockito.when(repository.obterSaldoPorTipoLancamentoEUsuario(id, TipoLancamento.DESPESA)).thenReturn(despesa);
+		Mockito.when(repository.obterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.RECEITA, StatusLancamento.EFETIVADO)).thenReturn(receita);
+		Mockito.when(repository.obterSaldoPorTipoLancamentoEUsuarioEStatus(id, TipoLancamento.DESPESA, StatusLancamento.EFETIVADO)).thenReturn(despesa);
 		
 		//acao
 		BigDecimal total = service.obterSaldoPorUsuario(id);
