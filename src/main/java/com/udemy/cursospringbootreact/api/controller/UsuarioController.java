@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.udemy.cursospringbootreact.api.dto.TokenDTO;
 import com.udemy.cursospringbootreact.api.dto.UsuarioDTO;
 import com.udemy.cursospringbootreact.exception.ErroAutenticacao;
 import com.udemy.cursospringbootreact.exception.RegraNegocioException;
 import com.udemy.cursospringbootreact.model.entity.Usuario;
+import com.udemy.cursospringbootreact.service.JwtService;
 import com.udemy.cursospringbootreact.service.LancamentoService;
 import com.udemy.cursospringbootreact.service.UsuarioService;
 
@@ -28,18 +30,19 @@ public class UsuarioController {
 		
 	private final UsuarioService usuarioService;
 	private final LancamentoService lancamentoService;
+	private final JwtService jwtService;
 	
 	@PostMapping("/autenticar")
-	public ResponseEntity autenticar(@RequestBody UsuarioDTO dto) {
+	public ResponseEntity<?> autenticar(@RequestBody UsuarioDTO dto) {
 		try {
 			Usuario usuarioAutenticado = usuarioService.autenticar(dto.getEmail(), dto.getSenha());
-			return ResponseEntity.ok(usuarioAutenticado);
+			String token = jwtService.gerarToken(usuarioAutenticado);
+			TokenDTO tokenDTO = new TokenDTO(usuarioAutenticado.getNome(), token);
+			return ResponseEntity.ok(tokenDTO);
 					
 		} catch (ErroAutenticacao e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
-		
-		
 	}
 	
 	@PostMapping
